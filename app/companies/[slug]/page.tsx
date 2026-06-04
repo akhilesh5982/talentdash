@@ -1,5 +1,5 @@
 export const revalidate = 86400
-export const dynamic = 'force-dynamic';
+
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
@@ -32,19 +32,16 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
 
   if (!company) notFound()
 
-  // Compute median
   const tcValues = company.salaries.map(s => Number(s.total_compensation)).sort((a, b) => a - b)
   const mid = Math.floor(tcValues.length / 2)
   const median = tcValues.length % 2 !== 0 ? tcValues[mid] : (tcValues[mid - 1] + tcValues[mid]) / 2
 
-  // Level distribution
   const levelDist: Record<string, number> = {}
   for (const s of company.salaries) {
     levelDist[s.level] = (levelDist[s.level] ?? 0) + 1
   }
   const total = company.salaries.length
 
-  // Serialize
   const salaries = company.salaries.map(s => ({
     id: s.id,
     role: s.role,
@@ -60,6 +57,18 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
 
   return (
     <main className="min-h-screen bg-[#F7F7F7]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: company.name,
+            url: `https://talentdash.in/companies/${company.slug}`,
+            description: `Salary data and compensation insights for ${company.name}`,
+          })
+        }}
+      />
       <div className="max-w-5xl mx-auto px-4 py-8">
 
         {/* Header */}
@@ -135,7 +144,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#EBEBEB] bg-[#F7F7F7]">
-                {['Role', 'Level', 'Location', 'Exp', 'Base', 'Stock', 'Total Comp'].map(h => (
+                {['Role', 'Level', 'Location', 'Exp', 'Base', 'Bonus', 'Stock', 'Total Comp'].map(h => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-medium text-[#717171] uppercase tracking-wide">{h}</th>
                 ))}
               </tr>
@@ -152,6 +161,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
                   <td className="px-4 py-3 text-[#484848]">{s.location}</td>
                   <td className="px-4 py-3 text-[#484848]">{s.experience_years}y</td>
                   <td className="px-4 py-3 text-[#484848]">{formatSalary(Number(s.base_salary), s.currency, 'INR')}</td>
+                  <td className="px-4 py-3 text-[#484848]">{Number(s.bonus) === 0 ? '—' : formatSalary(Number(s.bonus), s.currency, 'INR')}</td>
                   <td className="px-4 py-3 text-[#484848]">{Number(s.stock) === 0 ? '—' : formatSalary(Number(s.stock), s.currency, 'INR')}</td>
                   <td className="px-4 py-3 font-bold text-[#0369A1] text-base">
                     {formatSalary(Number(s.total_compensation), s.currency, 'INR')}

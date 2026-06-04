@@ -127,7 +127,9 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
       {paginated.length === 0 ? (
         <div className="bg-white rounded-xl border border-[#EBEBEB] p-12 text-center">
           <p className="text-[#484848] mb-2">No records found for these filters.</p>
-          <button onClick={clearFilters} className="text-[#FF5A5F] hover:underline text-sm">Try removing a filter</button>
+          <button onClick={clearFilters} className="text-[#FF5A5F] hover:underline text-sm">
+            Try removing a filter
+          </button>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-[#EBEBEB] overflow-hidden">
@@ -142,7 +144,12 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
                     className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide cursor-pointer hover:text-[#222222]">
                     Base<SortIcon col="base_salary" />
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide">Stock</th>
+                  <th className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide">
+                    Bonus
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide">
+                    Stock
+                  </th>
                   <th onClick={() => handleSort('total_compensation')}
                     className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide cursor-pointer hover:text-[#222222]">
                     Total Comp<SortIcon col="total_compensation" />
@@ -161,7 +168,12 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
                     </td>
                     <td className="px-4 py-3 text-[#484848]">{s.location}</td>
                     <td className="px-4 py-3 text-[#484848]">{s.experience_years}y</td>
-                    <td className="px-4 py-3 text-[#484848]">{formatSalary(Number(s.base_salary), s.currency, currency)}</td>
+                    <td className="px-4 py-3 text-[#484848]">
+                      {formatSalary(Number(s.base_salary), s.currency, currency)}
+                    </td>
+                    <td className="px-4 py-3 text-[#484848]">
+                      {Number(s.bonus) === 0 ? '—' : formatSalary(Number(s.bonus), s.currency, currency)}
+                    </td>
                     <td className="px-4 py-3 text-[#484848]">
                       {Number(s.stock) === 0 ? '—' : formatSalary(Number(s.stock), s.currency, currency)}
                     </td>

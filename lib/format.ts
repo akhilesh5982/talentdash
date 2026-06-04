@@ -1,7 +1,12 @@
 import { CURRENCY_RATES } from './constants'
 
 export function formatSalary(amount: number, currency: string, displayCurrency: string): string {
-  const inINR = currency === 'INR' ? amount : amount * CURRENCY_RATES[currency]
+  // Convert to INR first
+  const inINR = currency === 'INR'
+    ? amount
+    : amount / 100 * CURRENCY_RATES[currency]
+
+  // Convert from INR to display currency
   const converted = displayCurrency === 'INR'
     ? inINR
     : inINR / CURRENCY_RATES[displayCurrency]
@@ -12,6 +17,7 @@ export function formatSalary(amount: number, currency: string, displayCurrency: 
     return `₹${converted.toLocaleString('en-IN')}`
   }
 
-  const symbol = displayCurrency === 'USD' ? '$' : displayCurrency === 'GBP' ? '£' : '€'
-  return `${symbol}${Math.round(converted / 100).toLocaleString()}`
+  const symbol = displayCurrency === 'USD' ? '$'
+    : displayCurrency === 'GBP' ? '£' : '€'
+  return `${symbol}${Math.round(converted).toLocaleString()}`
 }
