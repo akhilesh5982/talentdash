@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TalentDash
 
-## Getting Started
+Career intelligence platform for Indian professionals. Structured, comparable, decision-ready salary data.
 
-First, run the development server:
+## Live URL
+https://your-vercel-url.vercel.app
 
-```bash
+## Tech Stack
+- Next.js 15 (App Router)
+- Tailwind CSS
+- Prisma + PostgreSQL (Neon)
+- Deployed on Vercel
+
+## Setup
+
+### 1. Clone and install
+git clone https://github.com/akhilesh5982/talentdash.git
+cd talentdash
+npm install
+
+### 2. Environment variables
+Create a `.env` file:
+DATABASE_URL="postgresql://..."
+
+### 3. Database setup
+npx prisma migrate dev --name init
+npx prisma db seed
+
+### 4. Run locally
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Architecture Decisions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Static vs ISR vs Dynamic
+- `/salaries` — ISR (revalidate: 3600) — changes daily with new records
+- `/companies/[slug]` — Static with generateStaticParams — rarely changes, pre-built at deploy
+- `/compare` — Client component — user-specific, cannot be prebuilt
+- `/api/*` — Dynamic — real-time data with Cache-Control headers
 
-## Learn More
+### Pagination
+Page-based over cursor-based because salary data is non-sequential and users need to jump to specific pages by filter context.
 
-To learn more about Next.js, take a look at the following resources:
+### What I would build with more time
+- Full-text search with Typesense
+- Interview experiences section
+- Workplace Index scoring
+- More salary records via scraping pipeline
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### What I cut and why
+- Auth/login — not required per task spec
+- Community/forum — deprioritized for core salary data quality
+- Tools calculators — focused on data integrity first

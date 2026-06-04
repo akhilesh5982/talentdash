@@ -2,6 +2,8 @@ import { prisma } from '@/lib/db'
 import SalaryTable from '@/components/features/SalaryTable'
 import { Metadata } from 'next'
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Software Engineer Salaries in India | TalentDash',
   description: 'Browse verified salary data for software engineers, product managers, and data analysts across top Indian and global companies.',
@@ -52,6 +54,19 @@ export default async function SalariesPage() {
   const salaries = await getSalaries()
   return (
     <main className="min-h-screen bg-[#F7F7F7]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Dataset',
+            name: 'Software Engineer Salaries in India',
+            description: 'Verified salary data for software engineers across top Indian and global companies',
+            url: 'https://talentdash.in/salaries',
+            creator: { '@type': 'Organization', name: 'TalentDash' },
+          })
+        }}
+      />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-[#222222] mb-2">
           Salary Explorer
