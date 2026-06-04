@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS, PAGE_SIZE } from '@/lib/constants'
 import { formatSalary } from '@/lib/format'
@@ -22,7 +22,7 @@ type Salary = {
 type SortKey = 'total_compensation' | 'base_salary' | 'experience_years'
 type SortDir = 'asc' | 'desc'
 
-export default function SalaryTable({ initialData }: { initialData: Salary[] }) {
+function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -36,7 +36,6 @@ export default function SalaryTable({ initialData }: { initialData: Salary[] }) 
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(searchParams.get('company') ?? '')
 
-  // Debounced company search
   const handleSearch = useCallback((val: string) => {
     setSearch(val)
     setCompany(val)
@@ -63,12 +62,8 @@ export default function SalaryTable({ initialData }: { initialData: Salary[] }) 
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
-      const aVal = sortKey === 'experience_years'
-        ? a[sortKey]
-        : Number(a[sortKey])
-      const bVal = sortKey === 'experience_years'
-        ? b[sortKey]
-        : Number(b[sortKey])
+      const aVal = sortKey === 'experience_years' ? a[sortKey] : Number(a[sortKey])
+      const bVal = sortKey === 'experience_years' ? b[sortKey] : Number(b[sortKey])
       return sortDir === 'desc' ? Number(bVal) - Number(aVal) : Number(aVal) - Number(bVal)
     })
   }, [filtered, sortKey, sortDir])
@@ -91,7 +86,6 @@ export default function SalaryTable({ initialData }: { initialData: Salary[] }) 
 
   return (
     <div>
-      {/* Filter Bar */}
       <div className="bg-white rounded-xl border border-[#EBEBEB] p-4 mb-4 flex flex-wrap gap-3">
         <input
           type="text"
@@ -123,23 +117,17 @@ export default function SalaryTable({ initialData }: { initialData: Salary[] }) 
             </button>
           ))}
         </div>
-        <button onClick={clearFilters} className="text-sm text-[#FF5A5F] hover:underline">
-          Clear all
-        </button>
+        <button onClick={clearFilters} className="text-sm text-[#FF5A5F] hover:underline">Clear all</button>
       </div>
 
-      {/* Results count */}
       <p className="text-sm text-[#717171] mb-2">
         Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, sorted.length)} of {sorted.length} records
       </p>
 
-      {/* Table */}
       {paginated.length === 0 ? (
         <div className="bg-white rounded-xl border border-[#EBEBEB] p-12 text-center">
           <p className="text-[#484848] mb-2">No records found for these filters.</p>
-          <button onClick={clearFilters} className="text-[#FF5A5F] hover:underline text-sm">
-            Try removing a filter
-          </button>
+          <button onClick={clearFilters} className="text-[#FF5A5F] hover:underline text-sm">Try removing a filter</button>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-[#EBEBEB] overflow-hidden">
@@ -173,9 +161,7 @@ export default function SalaryTable({ initialData }: { initialData: Salary[] }) 
                     </td>
                     <td className="px-4 py-3 text-[#484848]">{s.location}</td>
                     <td className="px-4 py-3 text-[#484848]">{s.experience_years}y</td>
-                    <td className="px-4 py-3 text-[#484848]">
-                      {formatSalary(Number(s.base_salary), s.currency, currency)}
-                    </td>
+                    <td className="px-4 py-3 text-[#484848]">{formatSalary(Number(s.base_salary), s.currency, currency)}</td>
                     <td className="px-4 py-3 text-[#484848]">
                       {Number(s.stock) === 0 ? '—' : formatSalary(Number(s.stock), s.currency, currency)}
                     </td>
@@ -189,8 +175,6 @@ export default function SalaryTable({ initialData }: { initialData: Salary[] }) 
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
           <div className="flex items-center justify-between px-4 py-3 border-t border-[#EBEBEB]">
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
               className="px-4 py-2 text-sm border border-[#EBEBEB] rounded-lg disabled:opacity-40 hover:bg-[#F2F2F2]">
@@ -205,5 +189,13 @@ export default function SalaryTable({ initialData }: { initialData: Salary[] }) 
         </div>
       )}
     </div>
+  )
+}
+
+export default function SalaryTable({ initialData }: { initialData: Salary[] }) {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-[#717171]">Loading salaries...</div>}>
+      <SalaryTableInner initialData={initialData} />
+    </Suspense>
   )
 }

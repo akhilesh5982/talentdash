@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { formatSalary } from '@/lib/format'
 
@@ -30,7 +30,7 @@ type CompareResult = {
   }
 }
 
-export default function ComparePage() {
+function CompareContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -86,7 +86,6 @@ export default function ComparePage() {
         <h1 className="text-3xl font-bold text-[#222222] mb-2">Compare Salaries</h1>
         <p className="text-[#717171] mb-6">Select two salary records to compare side by side</p>
 
-        {/* Selectors */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           {[{ val: s1, set: setS1, label: 'Record A' }, { val: s2, set: setS2, label: 'Record B' }].map(({ val, set, label }) => (
             <div key={label} className="bg-white rounded-xl border border-[#EBEBEB] p-4">
@@ -104,12 +103,10 @@ export default function ComparePage() {
           ))}
         </div>
 
-        {/* Comparison Table */}
         {loading && <p className="text-center text-[#717171] py-8">Loading comparison...</p>}
 
         {result && !loading && (
           <div className="bg-white rounded-xl border border-[#EBEBEB] overflow-hidden">
-            {/* Winner badge */}
             <div className="grid grid-cols-3 border-b border-[#EBEBEB] bg-[#F7F7F7]">
               <div className="px-6 py-3 text-xs font-medium text-[#717171] uppercase">Field</div>
               <div className="px-6 py-3 text-xs font-medium text-[#717171] uppercase flex items-center gap-2">
@@ -138,7 +135,6 @@ export default function ComparePage() {
               </div>
             ))}
 
-            {/* Delta row */}
             <div className="grid grid-cols-3 bg-[#F7F7F7] border-t-2 border-[#EBEBEB]">
               <div className="px-6 py-4 text-sm font-bold text-[#222222]">TC Difference</div>
               <div className="px-6 py-4 col-span-2 text-sm">
@@ -153,5 +149,13 @@ export default function ComparePage() {
         )}
       </div>
     </main>
+  )
+}
+
+export default function ComparePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F7F7F7] flex items-center justify-center text-[#717171]">Loading...</div>}>
+      <CompareContent />
+    </Suspense>
   )
 }
