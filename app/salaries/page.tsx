@@ -4,13 +4,18 @@ import { Metadata } from 'next'
 
 export const revalidate = 3600
 
+const BASE_URL = 'https://talentdash-git-main-akhilesh-kumar-s-projects2.vercel.app'
+
 export const metadata: Metadata = {
   title: 'Software Engineer Salaries in India | TalentDash',
   description: 'Browse verified salary data for software engineers, product managers, and data analysts across top Indian and global companies.',
+  alternates: {
+    canonical: `${BASE_URL}/salaries`,
+  },
   openGraph: {
     title: 'Software Engineer Salaries in India | TalentDash',
     description: 'Browse verified salary data across top companies.',
-    url: 'https://talentdash.in/salaries',
+    url: `${BASE_URL}/salaries`,
   },
 }
 
@@ -62,7 +67,7 @@ export default async function SalariesPage() {
             '@type': 'Dataset',
             name: 'Software Engineer Salaries in India',
             description: 'Verified salary data for software engineers across top Indian and global companies',
-            url: 'https://talentdash.in/salaries',
+            url: `${BASE_URL}/salaries`,
             creator: { '@type': 'Organization', name: 'TalentDash' },
           })
         }}
