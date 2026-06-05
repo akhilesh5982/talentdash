@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 
 export const revalidate = 3600
 
-const BASE_URL = 'https://talentdash-git-main-akhilesh-kumar-s-projects2.vercel.app'
+const BASE_URL = 'https://talentdash-bay.vercel.app'
 
 export const metadata: Metadata = {
   title: 'Software Engineer Salaries in India | TalentDash',
@@ -57,6 +57,11 @@ async function getSalaries() {
 
 export default async function SalariesPage() {
   const salaries = await getSalaries()
+
+  const companies = new Set(salaries.map(s => s.company.name)).size
+  const roles = new Set(salaries.map(s => s.role)).size
+  const locations = new Set(salaries.map(s => s.location)).size
+
   return (
     <main className="min-h-screen bg-[#F7F7F7]">
       <script
@@ -72,13 +77,48 @@ export default async function SalariesPage() {
           })
         }}
       />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-[#222222] mb-2">
-          Salary Explorer
-        </h1>
-        <p className="text-[#717171] mb-6">
-          {salaries.length} verified salary records across top companies
-        </p>
+
+      {/* Page header */}
+      <div className="bg-white border-b border-[#EBEBEB]">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <p className="text-xs font-semibold text-[#FF5A5F] uppercase tracking-widest mb-1">Compensation Data</p>
+              <h1 className="text-[32px] font-bold text-[#222222] leading-tight">
+                Salary Explorer
+              </h1>
+              <p className="text-[#717171] mt-1 text-sm">
+                Structured, level-tagged compensation data from top Indian and global companies.
+              </p>
+            </div>
+
+            {/* Quick stats */}
+            <div className="flex gap-6">
+              {[
+                { label: 'Records', value: salaries.length },
+                { label: 'Companies', value: companies },
+                { label: 'Roles', value: roles },
+                { label: 'Cities', value: locations },
+              ].map(s => (
+                <div key={s.label} className="text-center">
+                  <p className="text-xl font-bold text-[#222222]">{s.value}</p>
+                  <p className="text-xs text-[#717171] font-medium">{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Breadcrumb */}
+          <div className="mt-4 flex items-center gap-2 text-xs text-[#717171]">
+            <span>TalentDash</span>
+            <span>›</span>
+            <span className="text-[#222222] font-medium">Salaries</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
         <SalaryTable initialData={salaries} />
       </div>
     </main>
