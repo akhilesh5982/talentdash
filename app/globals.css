@@ -1,23 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #059669;
-  --color-brand-light: #d1fae5;
-  --color-brand-dark: #047857;
+  --color-brand: #16a34a;          /* Premium emerald green from your main banner search */
+  --color-brand-hover: #15803d;    /* Deep hover state */
+  --color-accent-indigo: #4f46e5;  /* Dashboard structural purple/indigo */
+  --color-bg-gray: #f8fafc;        /* Soft body contrast background color */
+  --color-border-card: #f1f5f9;    /* Clean border definition */
 }
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--color-bg-gray);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  color: #0f172a;
 }
 
-/* Smooth transitions on interactive elements */
-a, button {
-  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  transition-duration: 150ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+/* Custom shadow smoothing matching your screenshots */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
 }
