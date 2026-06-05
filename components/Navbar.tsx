@@ -10,11 +10,8 @@ export default function Navbar() {
     { label: "Companies", href: "/companies", hasArrow: true },
     { label: "Salaries", href: "/home-search" },
     { label: "Reviews", href: "/reviews" },
-    { label: "Interviews", href: "/interviews" },
-    { label: "Jobs", href: "/jobs" },
-    { label: "Forum", href: "/forum" },
     { label: "Offers", href: "/offers" },
-    { label: "Workplace Index", href: "/workplace-index" }, // 🚀 Exact matching spot from image_99033d.jpg
+    { label: "Workplace Index", href: "/workplace-index" }, // 🚀 Offers ke baad set hai
     { label: "Community", href: "/community" },
     { label: "Tools", href: "/tools", hasArrow: true },
   ];
