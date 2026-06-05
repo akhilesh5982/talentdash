@@ -1,74 +1,160 @@
-// app/page.tsx
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
 export default function HomePage() {
-  const telemetryMetrics = [
-    { value: "12M+", label: "Salaries Data Points" },
-    { value: "4.8M+", label: "Honest Reviews" },
-    { value: "950K+", label: "Interview Experiences" },
-    { value: "210K+", label: "Offers Decoded" },
-    { value: "120K+", label: "Active Threads" },
+  const [activeTab, setActiveTab] = useState("salaries");
+
+  const tabs = [
+    { id: "salaries", label: "Salaries", icon: "💰" },
+    { id: "reviews", label: "Reviews", icon: "⭐" },
+    { id: "interviews", label: "Interviews", icon: "💬" },
+    { id: "forum", label: "Forum", icon: "👥" },
   ];
 
-  const mainFeatures = [
-    { title: "Compensation Intelligence", desc: "Explore real salary insights and compensation trends across roles and cities.", link: "/salaries" },
-    { title: "Company Reviews & Culture", desc: "Read honest reviews detailing workplace environment, work-life balance, and management.", link: "/reviews" },
-    { title: "Interview Experiences", desc: "Practice with historical questions shared directly by verified candidates.", link: "/interviews" },
-    { title: "Offers & Negotiations", desc: "Evaluate total target compensation packages using accurate real-world data points.", link: "/offers" },
+  const trendingSearches = [
+    "Software Engineer",
+    "Data Scientist",
+    "Product Manager",
+    "Marketing Manager",
+    "Remote Jobs",
+  ];
+
+  const valueProps = [
+    { text: "Verified & Trusted", sub: "Real data. Real people.", icon: "🛡️" },
+    { text: "10M+ Users", sub: "Across the globe", icon: "👥" },
+    { text: "500K+ Companies", sub: "Researched & reviewed", icon: "🏢" },
+    { text: "100% Free", sub: "No hidden charges", icon: "🔒" },
   ];
 
   return (
-    <div className="space-y-16 pb-16">
-      {/* Hero Module */}
-      <section className="bg-gradient-to-b from-emerald-50/40 via-white to-white py-20 px-4 text-center">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <h1 className="text-5xl font-black text-gray-900 tracking-tight">
-            Explore. Compare. <span className="text-emerald-600">Grow.</span>
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover real salary insights, read reviews, prepare for interviews, and find the right opportunities — all in one place.
-          </p>
+    <div className="w-full min-h-screen bg-[#f8fafc] -mt-10 pt-4">
+      {/* Premium Hero Soft Curve Backdrop Section */}
+      <section className="w-full text-center py-16 md:py-24 px-4 bg-gradient-to-b from-emerald-50/60 via-emerald-50/20 to-transparent relative overflow-hidden rounded-b-[2.5rem]">
+        
+        {/* Main Title Headers */}
+        <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-4">
+          Explore. Compare. <span className="text-[#00a86b]">Grow.</span>
+        </h1>
+        <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto mb-10">
+          Explore salaries, read real reviews, prepare for interviews, and find the right opportunities — all in one place.
+        </p>
 
-          {/* Search Aggregator Form */}
-          <div className="bg-white p-4 rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3 mt-8">
-            <input type="text" placeholder="Job title, skill, or company..." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-emerald-500" />
-            <input type="text" placeholder="Location (e.g. Remote, San Francisco)..." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-emerald-500" />
-            <button className="w-full bg-emerald-600 text-white font-semibold py-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors">
-              Search Platform
-            </button>
+        {/* Tabbed Interactive Search Shell Container */}
+        <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100/80 p-6 md:p-8">
+          
+          {/* Active Navigation Pills Row */}
+          <div className="flex flex-wrap items-center justify-start md:justify-center gap-2 mb-6 border-b border-slate-100 pb-4">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? "bg-emerald-50 text-[#00a86b] shadow-xs border border-emerald-100"
+                    : "text-slate-500 hover:text-slate-900 bg-transparent border border-transparent"
+                }`}
+              >
+                <span>{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Core Input Pipeline Multi-Grid Field Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center bg-slate-50/50 p-2 rounded-2xl border border-slate-100">
+            
+            {/* Input 1: Role or Keyword */}
+            <div className="md:col-span-4 flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-slate-100 shadow-2xs">
+              <span className="text-slate-400 text-lg">🔍</span>
+              <div className="flex flex-col text-left w-full">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">Search by</span>
+                <input
+                  type="text"
+                  placeholder="Job title, skill, or company..."
+                  className="text-xs text-slate-800 outline-none placeholder-slate-400 font-medium w-full bg-transparent mt-0.5"
+                />
+              </div>
+            </div>
+
+            {/* Input 2: Geo Location */}
+            <div className="md:col-span-3 flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-slate-100 shadow-2xs">
+              <span className="text-slate-400 text-lg">📍</span>
+              <div className="flex flex-col text-left w-full">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">Location</span>
+                <input
+                  type="text"
+                  placeholder="e.g. New York, Remote"
+                  className="text-xs text-slate-800 outline-none placeholder-slate-400 font-medium w-full bg-transparent mt-0.5"
+                />
+              </div>
+            </div>
+
+            {/* Input 3: Professional Experience Years */}
+            <div className="md:col-span-3 flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-slate-100 shadow-2xs">
+              <span className="text-slate-400 text-lg">🏢</span>
+              <div className="flex flex-col text-left w-full">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">Experience</span>
+                <input
+                  type="text"
+                  placeholder="e.g. 0-2 years"
+                  className="text-xs text-slate-800 outline-none placeholder-slate-400 font-medium w-full bg-transparent mt-0.5"
+                />
+              </div>
+            </div>
+
+            {/* Final Action Submission Trigger */}
+            <div className="md:col-span-2 w-full">
+              <button className="w-full bg-[#00a86b] hover:bg-[#008f5a] text-white font-bold py-4 px-4 rounded-xl transition-all shadow-md shadow-emerald-600/10 text-xs tracking-wide">
+                Search
+              </button>
+            </div>
+          </div>
+
+          {/* Secondary Footer Meta: Trending Searches Tags */}
+          <div className="flex flex-wrap items-center justify-start gap-2 mt-6 text-xs text-slate-400 px-1">
+            <span className="font-semibold text-slate-500">Trending searches:</span>
+            {trendingSearches.map((search, idx) => (
+              <button
+                key={idx}
+                className="bg-white hover:bg-slate-50 text-slate-600 font-medium px-3 py-1.5 rounded-lg border border-slate-200 transition-colors cursor-pointer"
+              >
+                {search}
+              </button>
+            ))}
           </div>
         </div>
-      </section>
 
-      {/* Telemetry Counter Strip */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 bg-gray-50 p-8 rounded-2xl border border-gray-100 text-center">
-          {telemetryMetrics.map((m) => (
-            <div key={m.label} className="space-y-1">
-              <div className="text-3xl font-black text-gray-900">{m.value}</div>
-              <div className="text-xs text-gray-500 font-medium">{m.label}</div>
+        {/* Global Value Badges Strip (Perfect match to image_9ad4fa bottom section) */}
+        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 px-4">
+          {valueProps.map((item, idx) => (
+            <div key={idx} className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-3 bg-white/50 p-4 rounded-xl backdrop-blur-xs border border-white/40">
+              <div className="w-10 h-10 rounded-lg bg-white shadow-3xs flex items-center justify-center text-lg border border-slate-100 shrink-0">
+                {item.icon}
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-slate-800">{item.text}</h4>
+                <p className="text-[11px] text-slate-400 font-medium mt-0.5">{item.sub}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Core Platform Modules Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="text-center space-y-2">
-          <h2 className="text-3xl font-extrabold text-gray-900">Explore by what matters to you</h2>
-          <p className="text-sm text-gray-500">Real data from verified professionals worldwide to help make smart career moves.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {mainFeatures.map((f) => (
-            <div key={f.title} className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <h3 className="font-bold text-gray-900 text-lg">{f.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{f.desc}</p>
-              </div>
-              <Link href={f.link} className="text-xs text-emerald-600 font-bold hover:underline inline-flex items-center gap-1">
-                Explore Module →
-              </Link>
+      {/* Grid Platform Section (Stats counter row matching image_9a5882 bottom block) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 text-center">
+          {[
+            { count: "12M+", desc: "Salaries Data Points" },
+            { count: "4.8M+", desc: "Honest Reviews" },
+            { count: "950K+", desc: "Interview Experiences" },
+            { count: "210K+", desc: "Offers Decoded" },
+            { count: "120K+", desc: "Active Threads" },
+          ].map((stat, i) => (
+            <div key={i} className="p-4 rounded-xl">
+              <div className="text-3xl font-black text-slate-900 tracking-tight">{stat.count}</div>
+              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-1">{stat.desc}</div>
             </div>
           ))}
         </div>
