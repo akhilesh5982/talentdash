@@ -1,250 +1,140 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-
-export default function InterviewsPage() {
-  const [activeTab, setActiveTab] = useState("Popular Roles");
-
-  const recentQuestions = [
-    {
-      company: "Google",
-      logo: "G",
-      role: "Software Engineer",
-      time: "2h ago",
-      question: "Given a binary tree, serialize and deserialize it. How would you design the serialization method?",
-      tags: ["Algorithms", "Binary Tree", "Design"],
-      difficulty: "Easy",
-      diffColor: "bg-emerald-50 text-emerald-700 border-emerald-100",
-      answers: "128 answers"
-    },
-    {
-      company: "Microsoft",
-      logo: "M",
-      role: "Product Manager",
-      time: "3h ago",
-      question: "How would you improve customer retention for Microsoft 365? Walk me through your approach.",
-      tags: ["Product Sense", "Metrics", "Strategy"],
-      difficulty: "Medium",
-      diffColor: "bg-amber-50 text-amber-700 border-amber-100",
-      answers: "96 answers"
-    },
-    {
-      company: "Amazon",
-      logo: "A",
-      role: "SDE II",
-      time: "5h ago",
-      question: "Design a rate limiter. How would you handle distributed systems and ensure scalability?",
-      tags: ["System Design", "Scalability", "API"],
-      difficulty: "Hard",
-      diffColor: "bg-rose-50 text-rose-700 border-rose-100",
-      answers: "64 answers"
-    }
-  ];
-
-  const roleList = [
-    { name: "Software Engineer", count: "12.4K questions", growth: "18%", trend: "vs last month", icons: ["G", "A", "M"] },
-    { name: "Product Manager", count: "8.7K questions", growth: "14%", trend: "vs last month", icons: ["A", "G", "M"] },
-    { name: "Data Analyst", count: "6.3K questions", growth: "22%", trend: "vs last month", icons: ["A", "M", "G"] },
-    { name: "Product Designer", count: "4.1K questions", growth: "16%", trend: "vs last month", icons: ["G", "M", "A"] }
-  ];
-
-  const topics = [
-    { title: "System Design", total: "2.4K questions", bg: "bg-purple-50 text-purple-700" },
-    { title: "Algorithms", total: "1.8K questions", bg: "bg-blue-50 text-blue-700" },
-    { title: "SQL", total: "1.6K questions", bg: "bg-amber-50 text-amber-700" },
-    { title: "Behavioral", total: "1.5K questions", bg: "bg-rose-50 text-rose-700" },
-    { title: "Product Sense", total: "1.2K questions", bg: "bg-emerald-50 text-emerald-700" },
-    { title: "Data Structures", total: "987 questions", bg: "bg-indigo-50 text-indigo-700" }
-  ];
-
+export default function InterviewsDashboard() {
   return (
-    <div className="space-y-10 pb-20">
-      
-      {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-2xs">
-        <div>
-          <span className="text-[10px] font-black text-brand bg-emerald-50 px-2 py-0.5 rounded-md tracking-wider uppercase">
-            Interviews
-          </span>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
-            Real interview questions from <span className="text-brand">real candidates</span>
-          </h1>
-          <p className="text-slate-400 text-xs mt-0.5">
-            Recent interview experiences shared by verified professionals.
-          </p>
-        </div>
-        <button className="bg-brand text-white text-xs font-bold py-2.5 px-4 rounded-xl hover:bg-brand-hover transition-colors whitespace-nowrap shadow-xs">
-          Explore all interviews →
-        </button>
-      </div>
-
-      {/* SECTION 1: Recent Questions Horizontal Row Carousel Slider */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="text-sm font-black text-slate-900 flex items-center gap-1.5 tracking-tight">
-            ⚡ Recent questions asked
-          </h2>
-          <span className="text-xs font-bold text-brand hover:underline cursor-pointer">View all</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {recentQuestions.map((q, idx) => (
-            <div key={idx} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-2xs hover:border-slate-200/80 transition-all flex flex-col justify-between space-y-4">
-              <div className="space-y-3">
-                {/* Meta Top Row */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 bg-slate-900 rounded-lg text-white font-black text-xs flex items-center justify-center shadow-2xs">
-                      {q.logo}
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-black text-slate-900 leading-tight">{q.company}</h4>
-                      <p className="text-[10px] text-slate-400 font-medium">{q.role} • {q.time}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Question Body Text */}
-                <p className="text-xs text-slate-700 font-medium leading-relaxed line-clamp-3">
-                  "{q.question}"
-                </p>
-              </div>
-
-              {/* Badges Footer Area */}
-              <div className="space-y-3 pt-2 border-t border-slate-50">
-                <div className="flex flex-wrap gap-1">
-                  {q.tags.map((tag, i) => (
-                    <span key={i} className="text-[9px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-md">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                
-                <div className="flex items-center justify-between text-[10px] font-bold">
-                  <span className={`px-2 py-0.5 rounded-sm border ${q.diffColor}`}>
-                    {q.difficulty}
-                  </span>
-                  <span className="text-slate-400 font-semibold">{q.answers}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* SECTION 2: Bottom Double Column Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <div className="w-full bg-[#f8f9fa] min-h-screen py-8 px-4 sm:px-6 lg:px-8 font-sans antialiased text-slate-800">
+      <div className="max-w-7xl mx-auto space-y-10">
         
-        {/* LEFT COMPONENT: Browse Questions by Role (7 Columns) */}
-        <div className="lg:col-span-7 bg-white border border-slate-100 rounded-2xl p-5 shadow-2xs space-y-4">
-          <div className="border-b border-slate-100 pb-2">
-            <h3 className="text-sm font-black text-slate-900 tracking-tight flex items-center gap-1.5">
-              💼 Browse questions by role
-            </h3>
-            
-            {/* Roles Sub Navigation Sub Header Tabs */}
-            <div className="flex gap-4 text-xs font-bold text-slate-400 mt-4">
-              {["Popular Roles", "Engineering", "Product", "Data"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`pb-2 relative transition-colors ${
-                    activeTab === tab ? "text-brand font-black border-b-2 border-brand" : "hover:text-slate-700"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+        {/* HERO BANNER BLOCK */}
+        <div className="w-full bg-gradient-to-r from-purple-900 to-indigo-800 rounded-2xl p-6 sm:p-10 text-white relative overflow-hidden shadow-xs">
+          <div className="relative z-10 space-y-4 max-w-2xl">
+            <span className="bg-white/10 text-white border border-white/10 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md">
+              📝 Interviews
+            </span>
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+              Real interview questions from<br />real candidates.
+            </h1>
+            <p className="text-xs sm:text-sm text-purple-100 font-medium">
+              Recent interview experiences shared by verified professionals. Get complete coding loop, system design, and behavioral questions.
+            </p>
+            <button className="bg-white text-purple-900 hover:bg-slate-50 active:scale-98 transition-all px-5 py-2.5 rounded-xl font-black text-xs tracking-wider cursor-pointer shadow-3xs">
+              EXPLORE ALL INTERVIEWS ›
+            </button>
           </div>
+          <div className="absolute top-0 right-0 w-64 h-full bg-white/5 rounded-full blur-3xl -mr-20 -mt-10 pointer-events-none select-none" />
+        </div>
 
-          {/* Role rows loop */}
-          <div className="divide-y divide-slate-50">
-            {roleList.map((role, idx) => (
-              <div key={idx} className="py-3.5 flex items-center justify-between group cursor-pointer first:pt-1 last:pb-1">
-                <div className="space-y-0.5">
-                  <h4 className="text-xs font-black text-slate-800 group-hover:text-brand transition-colors">
-                    {role.name}
-                  </h4>
-                  <p className="text-[10px] text-slate-400 font-semibold flex items-center gap-1.5">
-                    {role.count}
-                    <span className="text-slate-200">|</span>
-                    <span className="flex items-center gap-0.5 text-slate-300 font-bold">
-                      {role.icons.map((ic, i) => (
-                        <span key={i} className="w-3.5 h-3.5 bg-slate-100 rounded-xs inline-flex items-center justify-center text-[8px] font-black text-slate-500 border border-white -ml-1 first:ml-0">
-                          {ic}
-                        </span>
-                      ))}
-                      <span className="text-[9px] text-slate-400 pl-0.5">+3</span>
-                    </span>
-                  </p>
-                </div>
-                
-                {/* Growth Metric analytics badges side column */}
-                <div className="text-right space-y-0.5">
-                  <div className="text-xs font-black text-emerald-600 flex items-center justify-end gap-0.5">
-                    ↗ {role.growth}
+        {/* RECENT QUESTIONS ASKED ROW */}
+        <div className="space-y-4">
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider">Recent Questions Asked</h3>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {[
+              { company: "Google", role: "Software Engineer • 2h ago", text: `"Given a binary tree, serialize and deserialize it. How would you design the serialization method?"`, tags: ["Algorithms", "Binary Tree", "Design"], diff: "Easy", dColor: "text-emerald-600 bg-emerald-50 border-emerald-100", ans: "128 answers" },
+              { company: "Microsoft", role: "Product Manager • 3h ago", text: `"How would you improve customer retention for Microsoft 365? Walk me through your..."`, tags: ["Product Sense", "Metrics", "Strategy"], diff: "Medium", dColor: "text-amber-600 bg-amber-50 border-amber-100", ans: "96 answers" },
+              { company: "Amazon", role: "SDE II • 5h ago", text: `"Design a rate limiter. How would you handle distributed systems and ensure scalability?"`, tags: ["System Design", "Scalability", "API"], diff: "Hard", dColor: "text-rose-600 bg-rose-50 border-rose-100", ans: "64 answers" },
+              { company: "Apple", role: "Data Analyst • 6h ago", text: `"How would you analyze App Store performance and suggest data-driven improvements?"`, tags: ["SQL", "Analytics", "Data Visualization"], diff: "Medium", dColor: "text-amber-600 bg-amber-50 border-amber-100", ans: "52 answers" },
+              { company: "Meta", role: "Product Designer • 7h ago", text: `"Redesign the Facebook Events creation flow to improve user engagement. What would you..."`, tags: ["Product Design", "UX", "User Research"], diff: "Medium", dColor: "text-amber-600 bg-amber-50 border-amber-100", ans: "41 answers" },
+            ].map((card, i) => (
+              <div key={i} className="bg-white border border-slate-150 rounded-xl p-4 shadow-3xs flex flex-col justify-between space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-slate-900 block">{card.company}</span>
                   </div>
-                  <div className="text-[9px] text-slate-400 font-medium">{role.trend}</div>
+                  <span className="text-[9px] text-slate-400 font-bold block">{card.role}</span>
+                  <p className="text-[11px] font-bold text-slate-700 leading-relaxed italic">{card.text}</p>
+                </div>
+                <div className="space-y-2 pt-2 border-t border-slate-50">
+                  <div className="flex flex-wrap gap-1">
+                    {card.tags.map((tag, tIdx) => (
+                      <span key={tIdx} className="bg-slate-50 border border-slate-100 text-[9px] text-slate-500 font-bold px-1.5 py-0.5 rounded">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] pt-1">
+                    <span className={`px-1.5 py-0.5 rounded border text-[9px] font-black uppercase ${card.dColor}`}>{card.diff}</span>
+                    <span className="text-slate-400 font-bold font-mono">{card.ans}</span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-
-          <button className="w-full text-center text-xs font-bold text-brand hover:underline pt-2 block border-t border-slate-50">
-            View all roles and questions →
-          </button>
         </div>
 
-        {/* RIGHT COMPONENT: Trending Topics & Share Banner Pane (5 Columns) */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* TWO-COLUMN LAYOUT FOR BROWSE BY ROLE & TRENDING TOPICS */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Trending Panel Area */}
-          <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-2xs space-y-4">
-            <div>
-              <h3 className="text-sm font-black text-slate-900 tracking-tight flex items-center gap-1.5">
-                🔥 Trending interview topics
-              </h3>
-              <p className="text-[10px] text-slate-400 font-medium mt-0.5">Most discussed interview subjects this month</p>
+          {/* Browse Questions By Role Section */}
+          <div className="bg-white border border-slate-150 rounded-2xl p-5 shadow-3xs space-y-4 lg:col-span-2">
+            <div className="flex justify-between items-center pb-2 border-b border-slate-50">
+              <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider">Browse Questions By Role</h3>
+              <span className="text-[11px] font-black text-rose-500 hover:underline cursor-pointer">View all roles ›</span>
             </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              {topics.map((topic, idx) => (
-                <div key={idx} className="p-3 rounded-xl border border-slate-50 bg-slate-50/40 hover:bg-white hover:border-slate-100 transition-all cursor-pointer space-y-1">
-                  <h4 className="text-xs font-black text-slate-800 leading-tight">{topic.title}</h4>
-                  <p className="text-[9px] text-slate-400 font-bold">{topic.total}</p>
+            <div className="divide-y divide-slate-100">
+              {[
+                { title: "Software Engineer", count: "12.4K questions", latest: `"Implement LRU Cache in O(1) time complexity"`, growth: "18%" },
+                { title: "Product Manager", count: "8.7K questions", latest: `"How would you launch a new payments feature?"`, growth: "14%" },
+                { title: "Data Analyst", count: "6.3K questions", latest: `"Analyze sales performance and identify trends"`, growth: "22%" },
+                { title: "Product Designer", count: "4.1K questions", latest: `"Improve the checkout flow for better conversion"`, growth: "16%" }
+              ].map((role, idx) => (
+                <div key={idx} className="flex items-center justify-between py-4 first:pt-1 last:pb-1 group hover:bg-slate-50/30 px-1 rounded-xl transition-colors">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-xs font-black text-slate-800">{role.title}</h4>
+                      <span className="text-[10px] text-slate-400 font-medium">({role.count})</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 font-medium italic">Latest: {role.latest}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-black px-2 py-0.5 rounded-md">
+                      ↑ {role.growth}
+                    </span>
+                    <span className="text-slate-300 group-hover:text-slate-500 transition-colors text-xs font-bold">›</span>
+                  </div>
                 </div>
               ))}
             </div>
-            
-            <button className="w-full text-center text-xs font-bold text-slate-400 hover:text-slate-600 pt-1 block">
-              View all topics
-            </button>
           </div>
 
-          {/* Share Box Promotion Element Block */}
-          <div className="bg-slate-900 text-white rounded-2xl p-5 shadow-xs space-y-4 relative overflow-hidden">
-            <div className="space-y-1.5 relative z-10">
-              <h4 className="text-xs font-black tracking-tight flex items-center gap-1">
-                📥 Share your interview experience
-              </h4>
-              <p className="text-[11px] text-slate-400 font-medium leading-relaxed max-w-xs">
-                Help other candidates by sharing the questions you were asked in your recent tech interview loops.
-              </p>
+          {/* Trending Interview Topics Section */}
+          <div className="bg-white border border-slate-150 rounded-2xl p-5 shadow-3xs space-y-4">
+            <div className="pb-2 border-b border-slate-50">
+              <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider">Trending Interview Topics</h3>
             </div>
-            <button className="w-full bg-brand hover:bg-brand-hover text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-2xs relative z-10">
-              Submit interview questions →
-            </button>
-            <div className="absolute -bottom-6 -right-6 text-slate-800/20 text-7xl font-black select-none z-0">
-              💬
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { title: "System Design", count: "2.4K questions" },
+                { title: "Algorithms", count: "1.8K questions" },
+                { title: "SQL", count: "1.6K questions" },
+                { title: "Behavioral", count: "870 questions" },
+                { title: "Product Sense", count: "765 questions" },
+                { title: "Data Structures", count: "987 questions" },
+                { title: "API Design", count: "876 questions" },
+                { title: "Case Studies", count: "765 questions" },
+                { title: "Machine Learning", count: "654 questions" }
+              ].map((topic, idx) => (
+                <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl hover:border-indigo-200 transition-colors cursor-pointer space-y-0.5">
+                  <h4 className="text-[11px] font-black text-slate-800">{topic.title}</h4>
+                  <span className="text-[9px] text-slate-400 font-bold block font-mono">{topic.count}</span>
+                </div>
+              ))}
             </div>
           </div>
 
         </div>
 
-      </div>
+        {/* BOTTOM CALL TO ACTION INTERACTIVE STRIP */}
+        <div className="w-full bg-gradient-to-r from-purple-800 to-indigo-950 rounded-2xl p-6 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-3xs">
+          <div className="space-y-1 text-center sm:text-left">
+            <h3 className="text-base font-black tracking-tight">Share your interview experience</h3>
+            <p className="text-xs text-purple-200 font-medium">Help other professionals by sharing the interview loop questions you faced.</p>
+          </div>
+          <button className="bg-white text-purple-900 hover:bg-slate-50 active:scale-98 transition-all px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider shrink-0 cursor-pointer shadow-3xs">
+            SUBMIT INTERVIEW QUESTIONS
+          </button>
+        </div>
 
+      </div>
     </div>
   );
 }
