@@ -2,7 +2,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
+// FIX: Curly braces '{}' hata diye hain kyunki Navbar component export default use karta hai
+import Navbar from "@/components/Navbar";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-white text-gray-900 flex flex-col min-h-screen`}>
+      <body className={`${inter.className} antialiased bg-[#f8fafc] text-gray-900 flex flex-col min-h-screen`}>
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
         <Footer />
       </body>
     </html>
