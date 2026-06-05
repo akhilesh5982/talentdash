@@ -5,12 +5,20 @@ import { useState } from "react";
 export default function HomeSearchDashboard() {
   const [activeTab, setActiveTab] = useState("Salaries");
 
+  // Dynamic state management for input values
+  const [searchQuery, setSearchQuery] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
+  const [extraQuery, setExtraQuery] = useState("");
+
   const navigationTabs = [
-    { name: "Salaries", icon: "💰" },
-    { name: "Reviews", icon: "⭐" },
-    { name: "Interviews", icon: "💬" },
-    { name: "Forum", icon: "👥" }
+    { name: "Salaries", icon: "💰", label: "Search by job title, skill or company", placeholder: "e.g. Software Engineer, Data Analyst", extraLabel: "Experience", extraPlaceholder: "e.g. 0-2 years" },
+    { name: "Reviews", icon: "⭐", label: "Search company reviews", placeholder: "e.g. Google, Microsoft, Meta", extraLabel: "Industry", extraPlaceholder: "e.g. Tech, Finance" },
+    { name: "Interviews", icon: "💬", label: "Search interview questions by role", placeholder: "e.g. System Design, Frontend Engineer", extraLabel: "Difficulty", extraPlaceholder: "e.g. Hard, Medium" },
+    { name: "Forum", icon: "👥", label: "Search active forum threads", placeholder: "e.g. Appraisal 2026, Layoffs megathread", extraLabel: "Category", extraPlaceholder: "e.g. Career Growth, Tech" }
   ];
+
+  // Get current active layout configurations
+  const currentTabConfig = navigationTabs.find(tab => tab.name === activeTab) || navigationTabs[0];
 
   const trendingTags = [
     "Software Engineer",
@@ -27,6 +35,11 @@ export default function HomeSearchDashboard() {
     { label: "100% Free", desc: "No hidden charges", icon: "🔒" }
   ];
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert(`Searching ${activeTab} for:\nQuery: ${searchQuery}\nLocation: ${locationQuery}\nFilter: ${extraQuery}`);
+  };
+
   return (
     <div className="w-full bg-gradient-to-b from-slate-50/60 to-white py-16 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center min-h-[540px]">
       <div className="max-w-4xl w-full space-y-8 text-center">
@@ -41,8 +54,8 @@ export default function HomeSearchDashboard() {
           </p>
         </div>
 
-        {/* MASTER SEARCH WRAPPER: Exact Representation of image_99fae8.jpg Design Container */}
-        <div className="bg-white border border-slate-100 shadow-xl rounded-3xl p-5 sm:p-6 space-y-5 text-left max-w-3xl mx-auto">
+        {/* MASTER SEARCH FORM WRAPPER: Fully Interactive Box Component */}
+        <form onSubmit={handleSearchSubmit} className="bg-white border border-slate-100 shadow-xl rounded-3xl p-5 sm:p-6 space-y-5 text-left max-w-3xl mx-auto">
           
           {/* Top Segment: Tab Switcher Grid Link Elements */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-4 border-b border-slate-100 pb-3">
@@ -51,8 +64,14 @@ export default function HomeSearchDashboard() {
               return (
                 <button
                   key={tab.name}
-                  onClick={() => setActiveTab(tab.name)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(tab.name);
+                    // Clear fields on tab shift for better UX state
+                    setSearchQuery("");
+                    setExtraQuery("");
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     isSelected
                       ? "text-emerald-700 bg-emerald-50 border border-emerald-100/60 shadow-2xs"
                       : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
@@ -68,16 +87,18 @@ export default function HomeSearchDashboard() {
           {/* Center Segment: Multi-Column Segmented Search Inputs Grid */}
           <div className="bg-slate-50/50 border border-slate-100/80 rounded-2xl p-1.5 grid grid-cols-1 md:grid-cols-12 gap-1 items-center">
             
-            {/* Input Element: Job Title Queries Scope */}
+            {/* Input Element: Dynamic Context Query */}
             <div className="md:col-span-5 flex items-center gap-2.5 px-3 py-2">
               <span className="text-slate-400 text-sm select-none">🔍</span>
               <div className="w-full space-y-0.5">
-                <label className="text-[9px] font-bold text-slate-400 block uppercase tracking-wider leading-none">
-                  Search by job title, skill or company
+                <label className="text-[9px] font-bold text-slate-400 block uppercase tracking-wider leading-none transition-all">
+                  {currentTabConfig.label}
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Software Engineer, Data Analyst"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={currentTabConfig.placeholder}
                   className="w-full bg-transparent text-xs text-slate-800 font-semibold placeholder-slate-400 focus:outline-hidden"
                 />
               </div>
@@ -86,7 +107,7 @@ export default function HomeSearchDashboard() {
             {/* Layout Border Break Divider Line */}
             <div className="hidden md:block h-7 w-[1px] bg-slate-200/80 self-center justify-self-center" />
 
-            {/* Input Element: Location Coordinates Filters */}
+            {/* Input Element: Location Coordinates */}
             <div className="md:col-span-3 flex items-center gap-2.5 px-3 py-2">
               <span className="text-slate-400 text-sm select-none">📍</span>
               <div className="w-full space-y-0.5">
@@ -95,6 +116,8 @@ export default function HomeSearchDashboard() {
                 </label>
                 <input
                   type="text"
+                  value={locationQuery}
+                  onChange={(e) => setLocationQuery(e.target.value)}
                   placeholder="e.g. New York, Remote"
                   className="w-full bg-transparent text-xs text-slate-800 font-semibold placeholder-slate-400 focus:outline-hidden"
                 />
@@ -104,16 +127,18 @@ export default function HomeSearchDashboard() {
             {/* Layout Border Break Divider Line */}
             <div className="hidden md:block h-7 w-[1px] bg-slate-200/80 self-center justify-self-center" />
 
-            {/* Input Element: Experience Scale Slider Filters */}
+            {/* Input Element: Dynamic Extra Criteria Filters */}
             <div className="md:col-span-2 flex items-center gap-2.5 px-3 py-2">
-              <span className="text-slate-400 text-sm select-none">🏢</span>
+              <span className="text-slate-400 text-sm select-none">⚙️</span>
               <div className="w-full space-y-0.5">
-                <label className="text-[9px] font-bold text-slate-400 block uppercase tracking-wider leading-none">
-                  Experience
+                <label className="text-[9px] font-bold text-slate-400 block uppercase tracking-wider leading-none transition-all">
+                  {currentTabConfig.extraLabel}
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. 0-2 years"
+                  value={extraQuery}
+                  onChange={(e) => setExtraQuery(e.target.value)}
+                  placeholder={currentTabConfig.extraPlaceholder}
                   className="w-full bg-transparent text-xs text-slate-800 font-semibold placeholder-slate-400 focus:outline-hidden"
                 />
               </div>
@@ -121,20 +146,21 @@ export default function HomeSearchDashboard() {
 
             {/* Master CTA Search Core Button Grid Trigger */}
             <div className="md:col-span-2 p-0.5">
-              <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black py-3 px-4 rounded-xl shadow-xs transition-colors tracking-wide">
+              <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black py-3 px-4 rounded-xl shadow-xs transition-colors tracking-wide cursor-pointer text-center">
                 Search
               </button>
             </div>
 
           </div>
 
-          {/* Bottom Segment: Dynamic Inline Tags Array List */}
+          {/* Bottom Segment: Interactive Trending Tags Selector */}
           <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-bold text-slate-500">
             <span className="text-slate-400 font-semibold">Trending searches:</span>
             {trendingTags.map((tag) => (
               <span
                 key={tag}
-                className="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-100 px-2.5 py-1 rounded-lg cursor-pointer transition-colors"
+                onClick={() => setSearchQuery(tag)}
+                className="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-100 px-2.5 py-1 rounded-lg cursor-pointer transition-colors select-none"
               >
                 {tag}
               </span>
@@ -143,7 +169,7 @@ export default function HomeSearchDashboard() {
 
         </div>
 
-        {/* SECTION 3: Footer Horizonal Trust Badges Pipeline Grid Row */}
+        {/* SECTION 3: Footer Horizontal Trust Badges Pipeline Grid Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 max-w-3xl mx-auto border-t border-slate-100 text-left">
           {trustMetrics.map((metric, idx) => (
             <div key={idx} className="flex items-start gap-2.5">
