@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "react-link";
+import Link from "next/link"; //  Fixed: Correct Next.js import
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
@@ -8,7 +8,7 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Companies", href: "/companies", hasArrow: true },
-    { label: "Salaries", href: "/salaries" }, // 🛠️ Fixed: Changed from "/home-search" to "/salaries"
+    { label: "Salaries", href: "/salaries" }, 
     { label: "Reviews", href: "/reviews" },
     { label: "Offers", href: "/offers" },
     { label: "Workplace Index", href: "/workplace-index" }, 
