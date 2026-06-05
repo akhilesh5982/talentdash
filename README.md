@@ -37,27 +37,27 @@ Open http://localhost:3000
 ## Architecture Decisions
 
 ### Static vs ISR vs Dynamic
-- `/salaries` — ISR (revalidate: 3600) — salary data changes daily, full static would go stale
-- `/companies/[slug]` — ISR (revalidate: 86400) — company data rarely changes, pre-built via generateStaticParams from real DB at build time
-- `/compare` — Client component — user-specific selections, cannot be prebuilt
-- `/api/salaries` — Cache-Control: s-maxage=300, stale-while-revalidate=3600 — CDN caches for 5 min, serves stale for 1 hour while revalidating
-- `/api/companies/:slug` — Cache-Control: s-maxage=3600, stale-while-revalidate=86400 — company data is stable, cache for 1 hour
+- `/salaries` — ISR (revalidate: 3600) — salary data changes daily
+- `/companies/[slug]` — ISR (revalidate: 86400) — pre-built via generateStaticParams from real DB at build time
+- `/compare` — Client component — user-specific, cannot be prebuilt
+- `/api/salaries` — Cache-Control: s-maxage=300, stale-while-revalidate=3600
+- `/api/companies/:slug` — Cache-Control: s-maxage=3600, stale-while-revalidate=86400
 
 ### Why page-based pagination over cursor-based
-Salary data is filtered and sorted by multiple dimensions (company, level, location, TC). Cursor-based pagination breaks when sort order changes mid-session. Page-based is simpler and correct for this use case where users jump between filter combinations.
+Salary data is filtered and sorted across multiple dimensions. Cursor-based breaks when sort order changes. Page-based is correct for this use case.
 
 ### What I would build with another day
-- Full-text search with Typesense for better autocomplete
+- Full-text search with Typesense
 - Interview experiences section
-- Workplace Index composite scoring
-- More salary records via scraping pipeline
-- Sitemap generation for SEO
+- Workplace Index scoring
+- Sitemap generation
 
-### What I cut and why
-- Auth/login — not required per task spec, kept scope clean
-- Community/forum — deprioritized, focused on core data quality first
-- Tools calculators — salary table and company pages are higher evaluation weight
-- Reviews section — requires moderation layer, cut for time
+### What I did NOT build and why
+- Auth — not required per task spec
+- Community/forum — deprioritized for core data quality
+- Tools calculators — salary table is higher evaluation weight
+- Reviews — requires moderation layer, cut for time
+
 
 ## API Endpoints
 
