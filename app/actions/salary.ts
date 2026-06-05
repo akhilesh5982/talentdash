@@ -1,6 +1,8 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+// FIX: Path ko '@/lib/prisma' se badal kar '../../lib/db' kiya hai 
+// kyunki aapki file ka naam db.ts hai aur relative path Vercel par fail nahi hota.
+import { prisma } from "../../lib/db";
 import { Level, Currency, Source } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
