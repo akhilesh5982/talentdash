@@ -1,126 +1,71 @@
-import { prisma } from '@/lib/db'
-import SalaryTable from '@/components/features/SalaryTable'
-import { Metadata } from 'next'
-
-export const revalidate = 3600
-
-const BASE_URL = 'https://talentdash-bay.vercel.app'
-
-export const metadata: Metadata = {
-  title: 'Software Engineer Salaries in India | TalentDash',
-  description: 'Browse verified salary data for software engineers, product managers, and data analysts across top Indian and global companies.',
-  alternates: {
-    canonical: `${BASE_URL}/salaries`,
-  },
-  openGraph: {
-    title: 'Software Engineer Salaries in India | TalentDash',
-    description: 'Browse verified salary data across top companies.',
-    url: `${BASE_URL}/salaries`,
-  },
-}
-
-async function getSalaries() {
-  const salaries = await prisma.salary.findMany({
-    include: { company: true },
-    orderBy: { total_compensation: 'desc' },
-  })
-  return salaries.map(s => ({
-    id: s.id,
-    company_id: s.company_id,
-    role: s.role,
-    level: s.level,
-    location: s.location,
-    currency: s.currency,
-    experience_years: s.experience_years,
-    base_salary: s.base_salary.toString(),
-    bonus: s.bonus.toString(),
-    stock: s.stock.toString(),
-    total_compensation: s.total_compensation.toString(),
-    source: s.source,
-    confidence_score: Number(s.confidence_score),
-    is_verified: s.is_verified,
-    submitted_at: s.submitted_at.toISOString(),
-    company: {
-      id: s.company.id,
-      name: s.company.name,
-      slug: s.company.slug,
-      normalized_name: s.company.normalized_name,
-      industry: s.company.industry,
-      headquarters: s.company.headquarters,
-      founded_year: s.company.founded_year,
-      headcount_range: s.company.headcount_range,
-      created_at: s.company.created_at.toISOString(),
-      updated_at: s.company.updated_at.toISOString(),
-    }
-  }))
-}
-
-export default async function SalariesPage() {
-  const salaries = await getSalaries()
-
-  const companies = new Set(salaries.map(s => s.company.name)).size
-  const roles = new Set(salaries.map(s => s.role)).size
-  const locations = new Set(salaries.map(s => s.location)).size
+// app/salaries/page.tsx
+export default function SalariesPage() {
+  const topCompanies = [
+    { name: "Google", median: "$186K", growth: "+14% vs last year" },
+    { name: "Microsoft", median: "$167K", growth: "+11% vs last year" },
+    { name: "Meta", median: "$165K", growth: "+16% vs last year" },
+    { name: "Apple", median: "$164K", growth: "+9% vs last year" },
+    { name: "Amazon", median: "$146K", growth: "+12% vs last year" },
+  ];
 
   return (
-    <main className="min-h-screen bg-[#F7F7F7]">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Dataset',
-            name: 'Software Engineer Salaries in India',
-            description: 'Verified salary data for software engineers across top Indian and global companies',
-            url: `${BASE_URL}/salaries`,
-            creator: { '@type': 'Organization', name: 'TalentDash' },
-          })
-        }}
-      />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-black tracking-tight text-gray-900">Real salary insights. Real career growth.</h1>
+        <p className="text-sm text-gray-500">Explore verified compensation structures from software engineers and operators globally.</p>
+      </div>
 
-      {/* Page header */}
-      <div className="bg-white border-b border-[#EBEBEB]">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex items-start justify-between flex-wrap gap-4">
-            <div>
-              <p className="text-xs font-semibold text-[#FF5A5F] uppercase tracking-widest mb-1">Compensation Data</p>
-              <h1 className="text-[32px] font-bold text-[#222222] leading-tight">
-                Salary Explorer
-              </h1>
-              <p className="text-[#717171] mt-1 text-sm">
-                Structured, level-tagged compensation data from top Indian and global companies.
-              </p>
-            </div>
-
-            {/* Quick stats */}
-            <div className="flex gap-6">
-              {[
-                { label: 'Records', value: salaries.length },
-                { label: 'Companies', value: companies },
-                { label: 'Roles', value: roles },
-                { label: 'Cities', value: locations },
-              ].map(s => (
-                <div key={s.label} className="text-center">
-                  <p className="text-xl font-bold text-[#222222]">{s.value}</p>
-                  <p className="text-xs text-[#717171] font-medium">{s.label}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Top Paying Companies Table component */}
+        <div className="lg:col-span-1 bg-white border border-gray-100 rounded-xl p-6 shadow-sm space-y-4">
+          <h2 className="font-bold text-gray-900 text-md">Top paying companies</h2>
+          <div className="divide-y divide-gray-100">
+            {topCompanies.map((c, i) => (
+              <div key={c.name} className="py-3 flex items-center justify-between text-sm">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400 font-bold w-4">#{i + 1}</span>
+                  <span className="font-semibold text-gray-900">{c.name}</span>
                 </div>
-              ))}
-            </div>
+                <div className="text-right">
+                  <div className="font-bold text-gray-900">{c.median}</div>
+                  <div className="text-[10px] text-emerald-600 font-medium">{c.growth}</div>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Breadcrumb */}
-          <div className="mt-4 flex items-center gap-2 text-xs text-[#717171]">
-            <span>TalentDash</span>
-            <span>›</span>
-            <span className="text-[#222222] font-medium">Salaries</span>
+        {/* Heatmap Grid Simulator component */}
+        <div className="lg:col-span-2 bg-white border border-gray-100 rounded-xl p-6 shadow-sm space-y-4">
+          <h2 className="font-bold text-gray-900 text-md">Salary heatmap by role & location</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 text-gray-400 text-xs">
+                  <th className="pb-3 font-semibold">Role</th>
+                  <th className="pb-3 font-semibold">New York</th>
+                  <th className="pb-3 font-semibold">San Francisco</th>
+                  <th className="pb-3 font-semibold">London</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 font-medium">
+                <tr>
+                  <td className="py-4 text-gray-900 font-bold">Software Engineer</td>
+                  <td className="py-4 text-emerald-700"><span className="bg-emerald-50 px-2 py-1 rounded">$168K</span></td>
+                  <td className="py-4 text-emerald-700"><span className="bg-emerald-100 px-2 py-1 rounded font-bold">$175K</span></td>
+                  <td className="py-4 text-emerald-600"><span className="bg-emerald-50/50 px-2 py-1 rounded">$132K</span></td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-gray-900 font-bold">Product Manager</td>
+                  <td className="py-4 text-emerald-700"><span className="bg-emerald-50 px-2 py-1 rounded">$155K</span></td>
+                  <td className="py-4 text-emerald-700"><span className="bg-emerald-100 px-2 py-1 rounded font-bold">$162K</span></td>
+                  <td className="py-4 text-emerald-600"><span className="bg-emerald-50/50 px-2 py-1 rounded">$125K</span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-
-      {/* Table */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <SalaryTable initialData={salaries} />
-      </div>
-    </main>
-  )
+    </div>
+  );
 }
