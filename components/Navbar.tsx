@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "react-link";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
@@ -8,10 +8,10 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Companies", href: "/companies", hasArrow: true },
-    { label: "Salaries", href: "/home-search" },
+    { label: "Salaries", href: "/salaries" }, // 🛠️ Fixed: Changed from "/home-search" to "/salaries"
     { label: "Reviews", href: "/reviews" },
     { label: "Offers", href: "/offers" },
-    { label: "Workplace Index", href: "/workplace-index" }, // 🚀 Offers ke baad set hai
+    { label: "Workplace Index", href: "/workplace-index" }, 
     { label: "Community", href: "/community" },
     { label: "Tools", href: "/tools", hasArrow: true },
   ];
