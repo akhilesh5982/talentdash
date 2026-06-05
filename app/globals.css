@@ -1,50 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #F7F7F7;
-  --foreground: #222222;
-  --card: #FFFFFF;
-  --border: #EBEBEB;
-  --primary: #FF5A5F;
+@theme {
+  --color-brand: #00a86b;          /* Pure premium signature emerald green */
+  --color-brand-hover: #008f5a;    /* Controlled link state interaction dark tone */
+  --color-accent-indigo: #6366f1;  /* Structural grid dashboard charts purple */
+  --color-bg-gray: #f8fafc;        /* Elite subtle slate body color backdrop */
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), ui-sans-serif, system-ui;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #f8fafc;
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #F7F7F7;
-}
-::-webkit-scrollbar-thumb {
-  background: #EBEBEB;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #D5D5D5;
-}
-
-/* Modern Card/Section shadow */
-.card-shadow {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
-}
-
-.card-shadow-hover {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.card-shadow-hover:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
+/* Custom premium container shadows to map image_9ad4dc dashboard layouts */
+.dashboard-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  border-radius: 1rem;
 }

@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -15,12 +14,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-[#f8fafc] text-gray-900 flex flex-col min-h-screen`}>
-        {/* Hum sirf real components use kar rahe hain jo project mein hain */}
+      <body className={`${inter.className} flex flex-col min-h-screen bg-[#f8fafc]`}>
+        {/* Render fixed premium split sub-navigation header */}
         <Navbar />
-        <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Responsive Content Core Shell Wrapper */}
+        <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           {children}
         </main>
+        
+        {/* Unified Application Footnote Navigation */}
         <Footer />
       </body>
     </html>
@@ -70,25 +73,25 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-900 text-gray-400 border-t border-gray-800">
+    <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-10">
           <div className="col-span-2">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 bg-emerald-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-extrabold text-xs">D</span>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-black text-sm">D</span>
               </div>
-              <span className="text-white font-extrabold">TalentDash</span>
+              <span className="text-white font-black tracking-tight text-lg">TalentDash</span>
             </div>
-            <p className="text-xs leading-relaxed mb-4 max-w-sm">
+            <p className="text-xs leading-relaxed mb-4 max-w-sm text-slate-400">
               Career intelligence platform. Structured, comparable, decision-ready salary data for professionals worldwide.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               {["IN", "US", "UK"].map((region) => (
                 <Link
                   key={region}
                   href={`/${region.toLowerCase()}`}
-                  className="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded-md transition-colors"
+                  className="text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded transition-colors"
                 >
                   {region}
                 </Link>
@@ -98,11 +101,11 @@ function Footer() {
 
           {navigationSections.map((section) => (
             <div key={section.title}>
-              <div className="text-white text-sm font-semibold mb-3">{section.title}</div>
-              <ul className="space-y-2">
+              <div className="text-white text-xs font-bold uppercase tracking-wider mb-4">{section.title}</div>
+              <ul className="space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link href={link.href} className="text-xs hover:text-white transition-colors">
+                    <Link href={link.href} className="text-xs hover:text-white transition-colors text-slate-400">
                       {link.label}
                     </Link>
                   </li>
@@ -112,11 +115,11 @@ function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
           <div>© {new Date().getFullYear()} TalentDash. All rights reserved.</div>
           <div className="flex gap-4">
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((legalItem) => (
-              <Link key={legalItem} href="#" className="hover:text-white transition-colors">
+              <Link key={legalItem} href="#" className="hover:text-slate-300 transition-colors">
                 {legalItem}
               </Link>
             ))}
