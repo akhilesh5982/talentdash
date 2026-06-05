@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback, Suspense } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { LEVEL_COLORS, PAGE_SIZE } from '@/lib/constants'
 import { formatSalary } from '@/lib/format'
@@ -22,13 +22,69 @@ type Salary = {
 type SortKey = 'total_compensation' | 'base_salary' | 'experience_years'
 type SortDir = 'asc' | 'desc'
 
+function LevelMultiSelect({
+  levels,
+  selected,
+  onChange,
+}: {
+  levels: string[]
+  selected: string[]
+  onChange: (val: string[]) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  function toggle(level: string) {
+    onChange(selected.includes(level) ? selected.filter(l => l !== level) : [...selected, level])
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="border border-[#EBEBEB] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#FF5A5F] bg-white text-[#484848] min-w-[120px] text-left flex items-center justify-between gap-2"
+      >
+        <span>{selected.length === 0 ? 'All Levels' : `${selected.length} Level${selected.length > 1 ? 's' : ''}`}</span>
+        <span className="text-[#717171]">▾</span>
+      </button>
+      {open && (
+        <div className="absolute top-full left-0 mt-1 bg-white border border-[#EBEBEB] rounded-lg shadow-lg z-10 min-w-[160px] py-1">
+          {levels.map(l => (
+            <label key={l} className="flex items-center gap-2 px-3 py-2 hover:bg-[#F7F7F7] cursor-pointer text-sm text-[#484848]">
+              <input
+                type="checkbox"
+                checked={selected.includes(l)}
+                onChange={() => toggle(l)}
+                className="accent-[#FF5A5F]"
+              />
+              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${LEVEL_COLORS[l] ?? 'bg-gray-100 text-gray-700'}`}>
+                {l}
+              </span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const [company, setCompany] = useState(searchParams.get('company') ?? '')
   const [role, setRole] = useState(searchParams.get('role') ?? '')
-  const [level, setLevel] = useState(searchParams.get('level') ?? '')
+  const [selectedLevels, setSelectedLevels] = useState<string[]>(
+    searchParams.get('level') ? searchParams.get('level')!.split(',') : []
+  )
   const [location, setLocation] = useState(searchParams.get('location') ?? '')
   const [currency, setCurrency] = useState<'INR' | 'USD'>('INR')
   const [sortKey, setSortKey] = useState<SortKey>('total_compensation')
@@ -46,6 +102,15 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
     router.replace(`/salaries?${params.toString()}`, { scroll: false })
   }, [searchParams, router])
 
+  const handleLevelChange = useCallback((levels: string[]) => {
+    setSelectedLevels(levels)
+    setPage(1)
+    const params = new URLSearchParams(searchParams.toString())
+    if (levels.length > 0) params.set('level', levels.join(','))
+    else params.delete('level')
+    router.replace(`/salaries?${params.toString()}`, { scroll: false })
+  }, [searchParams, router])
+
   const roles = useMemo(() => [...new Set(initialData.map(s => s.role))], [initialData])
   const levels = useMemo(() => [...new Set(initialData.map(s => s.level))], [initialData])
   const locations = useMemo(() => [...new Set(initialData.map(s => s.location))], [initialData])
@@ -54,11 +119,11 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
     return initialData.filter(s => {
       if (company && !s.company.name.toLowerCase().includes(company.toLowerCase())) return false
       if (role && s.role !== role) return false
-      if (level && s.level !== level) return false
+      if (selectedLevels.length > 0 && !selectedLevels.includes(s.level)) return false
       if (location && s.location !== location) return false
       return true
     })
-  }, [initialData, company, role, level, location])
+  }, [initialData, company, role, selectedLevels, location])
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -77,7 +142,7 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
   }
 
   function clearFilters() {
-    setCompany(''); setRole(''); setLevel(''); setLocation(''); setSearch(''); setPage(1)
+    setCompany(''); setRole(''); setSelectedLevels([]); setLocation(''); setSearch(''); setPage(1)
     router.replace('/salaries', { scroll: false })
   }
 
@@ -99,11 +164,13 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
           <option value="">All Roles</option>
           {roles.map(r => <option key={r} value={r}>{r}</option>)}
         </select>
-        <select value={level} onChange={e => { setLevel(e.target.value); setPage(1) }}
-          className="border border-[#EBEBEB] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#FF5A5F]">
-          <option value="">All Levels</option>
-          {levels.map(l => <option key={l} value={l}>{l}</option>)}
-        </select>
+
+        <LevelMultiSelect
+          levels={levels}
+          selected={selectedLevels}
+          onChange={handleLevelChange}
+        />
+
         <select value={location} onChange={e => { setLocation(e.target.value); setPage(1) }}
           className="border border-[#EBEBEB] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#FF5A5F]">
           <option value="">All Locations</option>
@@ -121,7 +188,7 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
       </div>
 
       <p className="text-sm text-[#717171] mb-2">
-        Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, sorted.length)} of {sorted.length} records
+        Showing {sorted.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, sorted.length)} of {sorted.length} records
       </p>
 
       {paginated.length === 0 ? (
@@ -144,12 +211,8 @@ function SalaryTableInner({ initialData }: { initialData: Salary[] }) {
                     className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide cursor-pointer hover:text-[#222222]">
                     Base<SortIcon col="base_salary" />
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide">
-                    Bonus
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide">
-                    Stock
-                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide">Bonus</th>
+                  <th className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide">Stock</th>
                   <th onClick={() => handleSort('total_compensation')}
                     className="px-4 py-3 text-left text-xs font-500 text-[#717171] uppercase tracking-wide cursor-pointer hover:text-[#222222]">
                     Total Comp<SortIcon col="total_compensation" />

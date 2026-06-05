@@ -33,20 +33,28 @@ export async function GET(
       )
     }
 
-    // Compute median total compensation
     const tcValues = company.salaries.map((s) => Number(s.total_compensation))
     const median_total_compensation = computeMedian(tcValues)
 
-    // Compute level distribution
     const level_distribution: Record<string, number> = {}
     for (const salary of company.salaries) {
       const lvl = salary.level
       level_distribution[lvl] = (level_distribution[lvl] ?? 0) + 1
     }
 
+    // Serialize BigInt fields in salaries
+    const serializedSalaries = company.salaries.map(s => ({
+      ...s,
+      base_salary: s.base_salary.toString(),
+      bonus: s.bonus.toString(),
+      stock: s.stock.toString(),
+      total_compensation: s.total_compensation.toString(),
+    }))
+
     return NextResponse.json(
       {
         ...company,
+        salaries: serializedSalaries,
         median_total_compensation,
         level_distribution,
       },

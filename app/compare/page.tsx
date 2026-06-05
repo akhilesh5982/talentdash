@@ -43,7 +43,15 @@ function CompareContent() {
   useEffect(() => {
     fetch('/api/salaries?limit=100')
       .then(r => r.json())
-      .then(d => setSalaries(d.data))
+      .then(d => {
+        setSalaries(d.data)
+        // Pre-fill s1 from c1 param if coming from company page
+        const c1 = searchParams.get('c1')
+        if (c1 && d.data.length > 0 && !searchParams.get('s1')) {
+          const first = d.data.find((s: Salary) => s.company.slug === c1)
+          if (first) setS1(first.id)
+        }
+      })
   }, [])
 
   useEffect(() => {

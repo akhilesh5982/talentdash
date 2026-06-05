@@ -17,9 +17,12 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit
 
     const where: Record<string, unknown> = {}
-    if (company) where.company = { normalized_name: { contains: company.toLowerCase() } }
+    if (company) where.company = { normalized_name: { contains: company.toLowerCase(), mode: 'insensitive' } }
     if (role) where.role = { contains: role, mode: 'insensitive' }
-    if (level) where.level = level
+    if (level) {
+      const levels = level.split(',').filter(Boolean)
+      where.level = levels.length === 1 ? levels[0] : { in: levels }
+    }
     if (location) where.location = { contains: location, mode: 'insensitive' }
     if (currency) where.currency = currency
 
@@ -40,7 +43,6 @@ export async function GET(req: NextRequest) {
       prisma.salary.count({ where }),
     ])
 
-    // Convert BigInt to string for JSON serialization
     const serialized = data.map(s => ({
       ...s,
       base_salary: s.base_salary.toString(),
