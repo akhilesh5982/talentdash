@@ -9,9 +9,10 @@ export default function Navbar() {
   const navLinks = [
     { label: "Companies", href: "/companies", hasArrow: true },
     { label: "Salaries", href: "/salaries" }, 
+    { label: "Compare", href: "/compare" }, // 🚀 Added Compare right alongside Salaries
     { label: "Reviews", href: "/reviews" },
     { label: "Interviews", href: "/interviews" },
-    { label: "Jobs", href: "/jobs" }, // 🚀 Added Jobs link right here
+    { label: "Jobs", href: "/jobs" }, 
     { label: "Offers", href: "/offers" },
     { label: "Workplace Index", href: "/workplace-index" }, 
     { label: "Community", href: "/community" },
