@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -11,7 +10,8 @@ export default function Navbar() {
     { label: "Companies", href: "/companies", hasArrow: true },
     { label: "Salaries", href: "/salaries" }, 
     { label: "Reviews", href: "/reviews" },
-    { label: "Interviews", href: "/interviews" }, // 🚀 Added here matching image_981b02.jpg
+    { label: "Interviews", href: "/interviews" },
+    { label: "Jobs", href: "/jobs" }, // 🚀 Added Jobs link right here
     { label: "Offers", href: "/offers" },
     { label: "Workplace Index", href: "/workplace-index" }, 
     { label: "Community", href: "/community" },
